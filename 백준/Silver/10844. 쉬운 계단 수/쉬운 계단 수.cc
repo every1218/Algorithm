@@ -1,35 +1,23 @@
-#include <iostream>
-#define mod 1000000000
-
+#include <bits/stdc++.h>
 using namespace std;
 
-int d[101][10] = {0};
+int dp[101][11] ={{0},{0,1,1,1,1,1,1,1,1,1}};
+//dp[i][j] : i자리수의 j로 끊나는 게 몇 갠지
 
 int main() {
-    int num;
-    cin>>num;
+    int n;
+    cin>>n;
     
-    for(int i=1; i<10; i++){
-        d[1][i] = 1;
-    }
-    
-    for(int i=2; i<=num; i++){
-        for(int j=0; j<10; j++){
-            if(j==0) { 
-                d[i][0] = d[i-1][1];
-            }else if(j==9){
-                d[i][9] = d[i-1][8];
-            }else{
-                d[i][j] = d[i-1][j-1] + d[i-1][j+1];    
-            }
-            d[i][j] %= mod;
+    for(int i=2; i<=n; i++){
+        for(int j=0; j<=9; j++){
+            dp[i][j] = (dp[i-1][j-1] + dp[i-1][j+1])%1000000000;
         }
     }
-        
-    int cnt =0;
-    for(int i=0; i<10; i++){
-        cnt = (cnt + d[num][i] )% mod;
-        
+    
+    
+    int ans=0;
+    for(int j=0; j<=9; j++){
+        ans = (ans+dp[n][j])%1000000000;
     }
-    cout<<cnt;
+    cout<<ans;
 }
