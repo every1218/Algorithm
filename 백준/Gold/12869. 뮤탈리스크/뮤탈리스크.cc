@@ -3,10 +3,15 @@ using namespace std;
 
 int dp[61][61][61]={0};
 int scv[3];
-int x[6] = {1,1,3,3,9,9};
-int y[6] = {3,9,1,9,1,3};
-int z[6] = {9,3,9,1,3,1};
+int dx[6] = {1,1,3,3,9,9};
+int dy[6] = {3,9,1,9,1,3};
+int dz[6] = {9,3,9,1,3,1};
 
+struct state{
+    int x;
+    int y;
+    int z;
+};
 
 int main() {
     int n;
@@ -15,40 +20,39 @@ int main() {
     for(int i=0; i<n; i++){
         cin>>scv[i];
     }
-
-    for(int i=0; i<61; i++){
-        for(int j=0; j<61; j++){
-            for(int k=0; k<61; k++){
-                if(i==0 && j==0 && k==0)continue;
-                int temp=INT_MAX;
-                int t[3]={-1,-1,-1};
-                for(int l=0; l<6; l++){
-                    if(i-x[l]<0) t[0]=0; else t[0]=i-x[l];
-                    if(j-y[l]<0) t[1]=0; else t[1]=j-y[l];
-                    if(k-z[l]<0) t[2]=0; else t[2]=k-z[l];
-                    
-                    temp = min(temp, dp[t[0]][t[1]][t[2]]);
-                }
-                if(temp!=INT_MAX)
-                    dp[i][j][k] = temp+1;
+    if(n==1) {scv[1]=0; scv[2]=0;}
+    if(n==2) scv[2]=0;
+    
+    fill(&dp[0][0][0], &dp[60][60][61], INT_MAX);
+    
+    queue<state>q;
+    q.push({scv[0], scv[1], scv[2]});
+    dp[scv[0]][scv[1]][scv[2]] = 0;
+    
+    while(!q.empty()){
+        int nx, ny, nz;
+        state cur = q.front(); q.pop();
+        
+        
+        for(int l=0; l<6; l++){
+            nx = cur.x - dx[l];
+            ny = cur.y - dy[l];
+            nz = cur.z - dz[l];
+            
+            if(nx<0) nx=0;
+            if(ny<0) ny=0;
+            if(nz<0) nz=0;
+            
+            if(dp[nx][ny][nz] != INT_MAX) continue;
+            
+            dp[nx][ny][nz] = min(dp[nx][ny][nz], dp[cur.x][cur.y][cur.z]+1);
+            
+            if(nx==0 && ny==0 && nz==0){
+                cout<<dp[0][0][0];
+                return 0;
             }
+            
+            q.push({nx,ny,nz});
         }
     }
-    
-    // for(int i=0; i<61; i++){
-    //     for(int j=0; j<61; j++){
-    //         for(int k=0; k<61; k++){
-    //             cout<<"dp["<<i<<','<<j<<','<<k<<"] : "<<dp[i][j][k]<<'\n';;
-    //         }
-    //     }
-    // }
-    
-    if(n==1){
-        cout<<dp[scv[0]][0][0];
-    }else if(n==2){
-        cout<<dp[scv[0]][scv[1]][0];
-    }else{
-        cout<<dp[scv[0]][scv[1]][scv[2]];
-    }
-    
 }
