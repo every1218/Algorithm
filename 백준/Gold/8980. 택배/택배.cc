@@ -27,24 +27,25 @@ int main() {
     int size=0;
     
     for(int i=0; i<m; i++){
+        int x,y,z;
         cin>>t[i].st>>t[i].ed>>t[i].num;
     }
     
     sort(t, t+m, compare);
     
+    // for(int i=0; i<m; i++){
+    //     cout<<t[i].st<<' '<<t[i].ed<<' '<<t[i].num<<'\n';
+    // }
+    
     int ans=0;
     for(int i=0; i<m; i++){
         // cout<<"i : "<<i<<'\n';
-        vector<int>temp;
-        for(int j=0; j<v.size(); j++){
+        for(int j=v.size()-1; j>=0; j--){
             if(t[i].st >= v[j].ed){
                 ans+=v[j].num;
                 size -= v[j].num;
-                temp.push_back(j);
+                v.erase(v.begin()+j);
             }
-        }
-        for(int j=0; j<temp.size(); j++){
-            v.erase(v.begin()+temp[j]);
         }
         
         
@@ -73,7 +74,7 @@ int main() {
                     }
                 }
             }
-            for(int j=0; j<del.size(); j++){
+            for(int j=del.size()-1; j>=0 ; j--){
                 v.erase(v.begin()+del[j]);
             }
         }
