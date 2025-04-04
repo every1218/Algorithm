@@ -2,55 +2,55 @@
 using namespace std;
 
 struct Truck{
-    int st; // 출발 마을
-    int ed; // 도착 마을
-    int num; // 박스 개수
+    int st, ed, wg;
 };
 
-// 정렬 기준: 도착 마을 오름차순
-bool compare(Truck a, Truck b){
-    if(a.ed == b.ed)
-        return a.st < b.st;
-    return a.ed < b.ed;
+bool compare(const Truck& a, const Truck& b) {
+    if(a.ed==b.ed) return a.st<b.st;
+    else return a.ed < b.ed; 
 }
 
 int main() {
-    int n, c, m;
-    cin >> n >> c >> m;
+    int n, c, m; //마을수, 트럭용량, 박스 개수
+    cin>>n>>c>>m;
     
-    vector<Truck> t(m); // 트럭 정보 저장
-    vector<int> v(n+1, 0); // 각 마을에서 트럭이 실은 박스 수
-
-    for(int i = 0; i < m; i++){
-        cin >> t[i].st >> t[i].ed >> t[i].num;
+    Truck t[10005];
+    int v[2005]={0}; //마을 정보
+    
+    for(int i=1; i<=m; i++){
+        int a1, a2, a3;
+        cin>>a1>>a2>>a3;
+        t[i] = {a1,a2,a3};
     }
     
-    sort(t.begin(), t.end(), compare);
+    sort(t+1, t+m+1, compare);
     
-    int ans = 0;
-    for(int i = 0; i < m; i++){
-        // cout<<"i : "<<i<<'\n';
-        bool loadable = true;
-       
-        for(int j=t[i].st; j < t[i].ed; j++){
-            t[i].num = min(t[i].num, c - v[j]);
-            // cout<<"     t[i].num:"<<t[i].num<<'\n';
-            if (t[i].num == 0) {
-                loadable = false;
-                break;
+    
+    // for(int i=1; i<=m; i++){  
+    //     cout<<t[i].st<<' '<<t[i].ed<<' '<<t[i].wg<<'\n';
+    // }
+    
+    int ans=0;
+    for(int i=1; i<=m; i++){  
+        int mn=INT_MAX;
+        for(int j=t[i].st; j<t[i].ed; j++){
+            if(v[j]+t[i].wg > c){ 
+                mn = min(mn,c-v[j]);
+            }else{
+                mn = min(mn,t[i].wg);
             }
         }
-        if (loadable) {
-            ans += t[i].num;
-            for (int j = t[i].st; j < t[i].ed; j++) 
-                v[j] += t[i].num;
-        }
         
-        // for(int j=1; j <= n; j++){
-        //     cout<<"     "<<v[j]<<' ';
+        for(int j=t[i].st; j<t[i].ed; j++){
+            v[j] += mn;
+        }
+        ans += mn;
+        
+        // cout<<"i="<<i<<" : "<<ans<<'\n';
+        // for(int i=1; i<=n; i++){  
+        //     cout<<"     "<<v[i]<<' ';
         // }cout<<'\n';
-        // cout<<"     ans:"<<ans<<'\n';
     }
-    
-    cout << ans << '\n';
+    cout<<ans;
+
 }
