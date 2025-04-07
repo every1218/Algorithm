@@ -1,16 +1,9 @@
 n = int(input())
-
 arr = input().split()
 
-test=False
-
+test=1
 for i in range(n):
-    if arr[i][0] == arr[0][0]:
-        continue
-    else:
-        test=True
+    if arr[i][0] != arr[0][0]:
+        test=0
 
-if not test :
-    print(1)
-else :
-    print(0)
+print(test)
